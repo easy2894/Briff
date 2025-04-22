@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AFTER Brif Formasi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        h2 {
+            text-align: center;
+        }
+        .form-step {
+            display: none;
+        }
+        .form-step.active {
+            display: block;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background: #007BFF;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <form id="briefForm">
+        <div class="form-step active" id="step1">
+            <h2>1-qadam</h2>
+            <label for="name">Ismingiz</label>
+            <input type="text" id="name" name="Ism" required>
+
+            <label for="phone">Telefon raqamingiz</label>
+            <input type="tel" id="phone" name="Telefon" placeholder="+998" required>
+
+            <button type="button" onclick="nextStep()">Davom etish</button>
+        </div>
+
+        <div class="form-step" id="step2">
+            <h2>2-qadam</h2>
+            <label for="brand">Brend nomi</label>
+            <input type="text" id="brand" name="Brend nomi">
+
+            <label for="industry">Faoliyat sohasi</label>
+            <input type="text" id="industry" name="Faoliyat sohasi">
+
+            <label for="audience">Maqsadli auditoriya</label>
+            <input type="text" id="audience" name="Auditoriya">
+
+            <label for="emotions">Brend qanday hissiyot uygʻotishi kerak?</label>
+            <input type="text" id="emotions" name="Hissiyot">
+
+            <label for="keywords">Kalit tushunchalar</label>
+            <input type="text" id="keywords" name="Tushunchalar">
+
+            <label>Logotip uslubi:</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="Uslub" value="Matnli">Matnli logotip</label>
+                <label><input type="checkbox" name="Uslub" value="Belgili">Belgili logotip</label>
+                <label><input type="checkbox" name="Uslub" value="Monogramma">Monogramma</label>
+                <label><input type="checkbox" name="Uslub" value="Abstrakt">Abstrakt ramz</label>
+                <label><input type="checkbox" name="Uslub" value="Emblema">Emblema</label>
+                <label><input type="checkbox" name="Uslub" value="Maskot">Maskot</label>
+                <label><input type="checkbox" name="Uslub" value="Minimalistik">Minimalistik</label>
+                <label><input type="checkbox" name="Uslub" value="Etnik">Etnik/Milliy</label>
+            </div>
+
+            <label for="references">Yoqqan misollar (link yoki tavsif)</label>
+            <textarea id="references" name="Misollar"></textarea>
+
+            <label for="colors">Ranglar yoki uslub bo‘yicha istaklar</label>
+            <textarea id="colors" name="Ranglar"></textarea>
+
+            <label for="comments">Izoh / qoʻshimcha</label>
+            <textarea id="comments" name="Izoh"></textarea>
+
+            <button type="submit">Yuborish</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function nextStep() {
+        document.getElementById('step1').classList.remove('active');
+        document.getElementById('step2').classList.add('active');
+    }
+
+    document.getElementById('briefForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        let message = "📝 *Yangi Brif Murojaati*\n\n";
+
+        for (let [key, value] of formData.entries()) {
+            message += `*${key}:* ${value}\n`;
+        }
+
+        const checkboxes = document.querySelectorAll('input[name="Uslub"]:checked');
+        if (checkboxes.length > 0) {
+            message += "*Logotip uslubi:* ";
+            checkboxes.forEach(cb => {
+                message += cb.value + ", ";
+            });
+            message += "\n";
+        }
+
+        const TOKEN = "7549810009:AAHNJ6FVAOfZ15l292CdLC6IC_wMe_aXQ-8";
+        const CHAT_ID = "-1002535316810";
+
+        const url = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
+        await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: message,
+                parse_mode: "Markdown"
+            })
+        });
+
+        alert("Yuborildi! Tez orada siz bilan bogʻlanamiz.");
+        document.getElementById("briefForm").reset();
+        location.reload();
+    });
+</script>
+</body>
+</html>
